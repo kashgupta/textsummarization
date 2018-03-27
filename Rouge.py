@@ -2,8 +2,8 @@
 def rouge_metrics(system_list,reference_list):
 	reference_word_count = len(reference_list)
 	system_word_count = len(system_list)
-	rouge_recall = len(intersection(system_list,reference_list))/reference_word_count
-	rouge_precision = len(intersection(system_list,reference_list))/system_word_count
+	rouge_recall = len(intersection(system_list,reference_list))*1.0/reference_word_count
+	rouge_precision = len(intersection(system_list,reference_list))*1.0/system_word_count
 
 	return rouge_recall, rouge_precision
 
