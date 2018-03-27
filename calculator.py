@@ -13,12 +13,15 @@
 
 
 def rouge_metrics(system_list,reference_list):
-	reference_word_count = len(reference_list)
-	system_word_count = len(system_list)
-	rouge_recall = len(intersection(system_list,reference_list))*1.0/reference_word_count
-	rouge_precision = len(intersection(system_list,reference_list))*1.0/system_word_count
-
-	return rouge_recall, rouge_precision
+    reference_word_count = len(reference_list)
+    system_word_count = len(system_list)
+    if (system_word_count == 0) or (reference_word_count == 0):
+        rouge_recall = 0
+        rouge_precision = 0
+    else:
+        rouge_recall = len(intersection(system_list,reference_list))*1.0/reference_word_count
+        rouge_precision = len(intersection(system_list,reference_list))*1.0/system_word_count
+    return rouge_recall, rouge_precision
 
 def intersection(system_lst, ref_lst):
     intersection_lst = [value for value in system_lst if value in ref_lst]
@@ -35,8 +38,8 @@ def create_ngrams(text_list,n=2):
 	return ngrams
 
 
-original_summaries_file_path = "Summaries/original_summaries.txt"
-new_summaries_file_path = "Summaries/new_summaries.txt"
+original_summaries_file_path = "y_data_train.txt"
+new_summaries_file_path = "baseline.txt"
 ngram = 2
 
 with open(original_summaries_file_path, "r") as f:
@@ -52,8 +55,8 @@ for row_original, row_new in zip(original.split("\n"), new.split("\n")):
 		system_list = row_original.split(" ")
 		reference_list = row_new.split(" ")
 
-		print ("System List:", system_list)
-		print ("Reference List:", reference_list)
+		#print ("System List:", system_list)
+		#print ("Reference List:", reference_list)
 
 		system_2grams = create_ngrams(system_list,2)
 		reference_2grams = create_ngrams(reference_list,2)
@@ -62,3 +65,5 @@ for row_original, row_new in zip(original.split("\n"), new.split("\n")):
 
 		line = str(rouge_2_recall) + "\t" + str(rouge_2_precision) + "\n"
 		f.write(line)
+
+f_score = 2*rouge_2_precision*rouge_2_recall/(rouge_2_precision + rouge_2_recall)
