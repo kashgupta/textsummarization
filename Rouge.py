@@ -37,10 +37,14 @@ reference_2grams = create_ngrams(reference_list,2)
 
 rouge_recall, rouge_precision = rouge_metrics(system_list,reference_list)
 
+rouge_2_recall, rouge_2_precision = rouge_metrics(system_2grams,reference_2grams)
+
 
 print(system_2grams)
 print("recall",rouge_recall)
 print("precision",rouge_precision)
+print("recall",rouge_2_recall)
+print("precision",rouge_2_precision)
 
 #chris said that averaging this metric for every text was fine
 
