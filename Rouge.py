@@ -34,13 +34,15 @@ reference_list = reference_text.split(" ")
 system_2grams = create_ngrams(system_list,2)
 reference_2grams = create_ngrams(reference_list,2)
 
+print (system_2grams)
+print (reference_2grams)
+
 
 rouge_recall, rouge_precision = rouge_metrics(system_list,reference_list)
 
 rouge_2_recall, rouge_2_precision = rouge_metrics(system_2grams,reference_2grams)
 
 
-print(system_2grams)
 print("recall",rouge_recall)
 print("precision",rouge_precision)
 print("recall",rouge_2_recall)

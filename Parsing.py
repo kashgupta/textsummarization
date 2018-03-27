@@ -41,18 +41,5 @@ def clean_data(line):
 temp = []
 for line in full_text:
     a = line[:50]
-#    if bool(re.search("[A-Z]*[,][\sa-zA-Z]*[\(][A-Za-z]*[\)]",a)):
     if bool(re.search("[A-Z]{3,}[,][\s][a-zA-Z]{3,}[\(][A-Za-z][\)]",a)):
         temp.append(line)
-    
-#with open("X_data_train.txt","w") as f:
-#    for line in full_text:
-#        f.write(line)
-#        f.write("\n")
-#        
-#with open("y_data_train.txt","w") as f:
-#    for line in text_summary:
-#        f.write(line)
-#        f.write("\n")
-#        
-
