@@ -1,7 +1,11 @@
 
-def rouge_metrics(lst1, lst2):
+def rouge_metrics(system_list,reference_list):
+	reference_word_count = len(reference_list)
+	system_word_count = len(system_list)
 	rouge_recall = len(intersection(system_list,reference_list))/reference_word_count
 	rouge_precision = len(intersection(system_list,reference_list))/system_word_count
+
+	return rouge_recall, rouge_precision
 
 
 def intersection(system_lst, ref_lst):
@@ -26,16 +30,15 @@ reference_text = "the cat was under the bed"
 system_list = system_text.split(" ")
 reference_list = reference_text.split(" ")
 
-system_word_count = len(system_list)
-reference_word_count = len(reference_list)
+
+system_2grams = create_ngrams(system_list,2)
+reference_2grams = create_ngrams(reference_list,2)
 
 
-rouge_recall = len(intersection(system_list,reference_list))/reference_word_count
-rouge_precision = len(intersection(system_list,reference_list))/system_word_count
+rouge_recall, rouge_precision = rouge_metrics(system_list,reference_list)
 
-ngrams = create_ngrams(system_list,2)
 
-print(ngrams)
+print(system_2grams)
 print("recall",rouge_recall)
 print("precision",rouge_precision)
 
