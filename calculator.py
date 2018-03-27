@@ -61,8 +61,8 @@ for row_original, row_new in zip(original.split("\n"), new.split("\n")):
 		#print ("System List:", system_list)
 		#print ("Reference List:", reference_list)
 
-		system_2grams = create_ngrams(system_list,2)
-		reference_2grams = create_ngrams(reference_list,2)
+		system_2grams = create_ngrams(system_list,ngram)
+		reference_2grams = create_ngrams(reference_list,ngram)
 
 		rouge_2_recall, rouge_2_precision = rouge_metrics(system_2grams,reference_2grams)
 
