@@ -72,13 +72,11 @@ for row_original, row_new in zip(original.split("\n"), new.split("\n")):
 		line = str(rouge_2_recall) + "\t" + str(rouge_2_precision) + "\n"
 		f.write(line)
 
-print ("Recall:", rrecall)
-print ("Precision:", rprecision)
 
 rrecall = np.mean(rrecall)
 rprecision = np.mean(rprecision)
-
 f_score = 2*rprecision*rrecall/(rprecision + rrecall)
 
-
+print ("Recall:", rrecall)
+print ("Precision:", rprecision)
 print ("FScore:", f_score)
