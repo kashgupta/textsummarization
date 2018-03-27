@@ -10,7 +10,7 @@
 # Output
 
 # Baseline_n_gram.txt containing tab delimited Precision and Recall values for each pair.
-
+import numpy as np
 
 def rouge_metrics(system_list,reference_list):
     reference_word_count = len(reference_list)
@@ -48,6 +48,9 @@ with open(original_summaries_file_path, "r") as f:
 with open(new_summaries_file_path, "r") as f:
     new = f.read()
 
+rrecall = []
+rprecision = []
+
 for row_original, row_new in zip(original.split("\n"), new.split("\n")):
 
 	with open("baseline_" + str(ngram) + "_gram.txt", "a") as f:
@@ -63,7 +66,19 @@ for row_original, row_new in zip(original.split("\n"), new.split("\n")):
 
 		rouge_2_recall, rouge_2_precision = rouge_metrics(system_2grams,reference_2grams)
 
+		rrecall.append(rouge_2_recall)
+		rprecision.append(rouge_2_precision)
+
 		line = str(rouge_2_recall) + "\t" + str(rouge_2_precision) + "\n"
 		f.write(line)
 
-f_score = 2*rouge_2_precision*rouge_2_recall/(rouge_2_precision + rouge_2_recall)
+print ("Recall:", rrecall)
+print ("Precision:", rprecision)
+
+rrecall = np.mean(rrecall)
+rprecision = np.mean(rprecision)
+
+f_score = 2*rprecision*rrecall/(rprecision + rrecall)
+
+
+print ("FScore:", f_score)
