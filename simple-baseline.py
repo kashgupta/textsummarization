@@ -11,7 +11,7 @@ args = parser.parse_args()
 def clean_data(line):
     line = line.split()
     line = [word.lower() for word in line]
-    line = [re.sub("[,-\.!?\"]","",word) for word in line] # Remove punctuation in the text
+    line = [re.sub("[,-\.!?]","",word) for word in line] # Remove punctuation in the text
     #line = [re.sub("[\(][a-zA-z0-9]*[\)]"," ", word) for word in line] # Remove words within brackets 
     #line = [re.sub("[0-9]*[.]*[0-9]*"," ", word) for word in line]
     return " ".join(line)
