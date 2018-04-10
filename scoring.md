@@ -9,7 +9,7 @@ For Rouge-N, the formulas above can be adapted to be:
 Recall = (number of overlapping n-grams)/(total n-grams in reference summary)
 Precision = (number of overlapping n-grams)/(total n-grams in reference summary)
 
-The metrics for precision and recall can be obtained by running calculator.py.
+The metrics for precision and recall can be obtained by running score.py.
 
 ROUGE was first introduced for text summarization in ACL in 2003.
 See paper by Chin-Yew Lin (http://www.aclweb.org/anthology/W04-1013). There it is stated that ROUGE-2, ROUGE-L and ROUGE-W worked well in single document summarization tasks, which validates our choice of ROUGE-2 as the selected evaluation method.
