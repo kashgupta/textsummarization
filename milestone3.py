@@ -50,10 +50,9 @@ for article in articles:
     #sent_concept_matrix = np.array(entities);
     id_to_sentence = {id: sentence for (id, sentence) in zip(range(len(sentences)), sentences)}
     for sentence in sentences:
-        #process the sentence with spacy to extract entities without for loop
+        #extract all entities for sentence
         sentence = str(sentence)
         spacy_sentence = nlp(sentence)
-        #print(spacy_sentence)
         sentence_entities = spacy_sentence.ents
         entities_count = len(sentence_entities)
 
@@ -73,24 +72,16 @@ for article in articles:
                 spacy_connector = nlp(connector)
                 connector_has_verb = False
                 for token in spacy_connector:
-                    print(token.pos_)
                     if token.pos_ == 'VERB':
-                        print('it is a verb!')
                         connector_has_verb = True
                         break
 
                 if connector_has_verb:
-                    pass
-                    #print('atomic_candidate',atomic_candidate)
-                    #print('connector',connector)
-                else:
-                    print('discarded candidate',atomic_candidate)
+                    print('atomic_candidate',atomic_candidate)
+                    print('connector',connector)
 
                 time.sleep(1)
 
-
-
-            #find the connector between the pair, keep the part that is a verb
             #output the named entity pair and connector that is in this sentence
 
     summary = ''
