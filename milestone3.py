@@ -4,6 +4,9 @@ import re
 import numpy as np
 
 parser = argparse.ArgumentParser()
+
+#To run spacy, in command line: pip install spacy
+#python -m spacy download en
 nlp = spacy.load('en')
 
 parser.add_argument('--goldfile', type=str, required=True)
@@ -52,6 +55,7 @@ for article in articles:
                 if entities[word] in sentence:
                     num_entities += 1
         if num_entities >= 2:
+            print('we found '+str(num_entities))
             #this is where im stopping for the night
             #find all pairs of named entities
             #find the connector between the pair, keep the part that is a verb
