@@ -38,17 +38,8 @@ y_pred = []
 for article in articles:
     doc = nlp(article)
     sentences = list(doc.sents)
-    entities = {}
-    for ent in doc.ents:
-        ent = str(ent)
-        ent_list = ent.split(' ')
-        if len(ent_list) == 1:
-            entities[ent_list[0]] = ''
-        else:
-            entities[ent_list[0]] = ' '.join(' ' + word for word in ent_list[1:len(ent_list)])
 
-    #sent_concept_matrix = np.array(entities);
-    id_to_sentence = {id: sentence for (id, sentence) in zip(range(len(sentences)), sentences)}
+    #id_to_sentence = {id: sentence for (id, sentence) in zip(range(len(sentences)), sentences)}
     for sentence in sentences:
         #extract all entities for sentence
         sentence = str(sentence)
