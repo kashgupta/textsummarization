@@ -4,16 +4,16 @@ import re
 import numpy as np
 import time
 
-parser = argparse.ArgumentParser()
+#parser = argparse.ArgumentParser()
 
 #To run spacy, in command line: pip install spacy
 #python -m spacy download en
 nlp = spacy.load('en')
 
-parser.add_argument('--goldfile', type=str, required=True)
-parser.add_argument('--predfile', type=str, required=True)
+#parser.add_argument('--goldfile', type=str, required=True)
+#parser.add_argument('--predfile', type=str, required=True)
 
-args = parser.parse_args()
+#args = parser.parse_args()
 
 def clean_data(line):
     line = line.split()
@@ -24,23 +24,30 @@ def clean_data(line):
     return " ".join(line)
 
 #using this for now because it's smaller than training set
-filename = "../X_data_train_5K.txt"
+filename = "X_data_train_5K.txt"
 
 with open(filename,"r") as f:
 	data = f.read()
 
-articles = data.split("\n")
+articles = data.split("\n")[:100]
 
 y_pred = []
 
 #https://spacy.io/usage/linguistic-features
 
+article_matrix = []
+sentence_index_dict = {}
+count = 0
+
 for article in articles:
     doc = nlp(article)
     sentences = list(doc.sents)
-
+    article_dict = {}          # ADDED
     #id_to_sentence = {id: sentence for (id, sentence) in zip(range(len(sentences)), sentences)}
     for sentence in sentences:
+        sentence_index_dict[count] = sentence
+        #article_dict[count]["atomic_candidate"] = []
+        #article_dict[count]["connector"] = []
         #extract all entities for sentence
         sentence = str(sentence)
         spacy_sentence = nlp(sentence)
@@ -68,21 +75,30 @@ for article in articles:
                         break
 
                 if connector_has_verb:
-                    #print('atomic_candidate',atomic_candidate)
-                    #print('connector',connector)
+                    if count not in article_dict.keys():
+                        article_dict[count] = {}
+                        article_dict[count]["atomic_candidate"] = 0
+                        article_dict[count]["connector"] = 0
 
-                #time.sleep(1)
+                    article_dict[count]["atomic_candidate"] += 1 # ADDED
+                    article_dict[count]["connector"] += 1  # ADDED
+#                    print('atomic_candidate',atomic_candidate)
+#                    print('connector',connector)
+        count += 1
+    article_matrix.append(article_dict) # ADDED
+#                time.sleep(1)
+print(len(article_matrix))
 
             #output the named entity pair and connector that is in this sentence
 
-    summary = ''
-    y_pred.append(summary)
+#     summary = ''
+#     y_pred.append(summary)
 
-y_pred = [clean_data(summary) for summary in y_pred]
+# y_pred = [clean_data(summary) for summary in y_pred]
 
 
-with open("../baseline.txt","w") as f:
-	for line in y_pred:
-		f.write(line)
-		f.write("\n")
+# with open("baseline.txt","w") as f:
+# 	for line in y_pred:
+# 		f.write(line)
+# 		f.write("\n")
 
