@@ -47,19 +47,49 @@ for article in articles:
         else:
             entities[ent_list[0]] = ' '.join(' ' + word for word in ent_list[1:len(ent_list)])
 
-    sent_concept_matrix = np.array(entities);
+    #sent_concept_matrix = np.array(entities);
     id_to_sentence = {id: sentence for (id, sentence) in zip(range(len(sentences)), sentences)}
     for sentence in sentences:
-        spacy_sentence = nlp(str(sentence))
+        #process the sentence with spacy to extract entities without for loop
+        sentence = str(sentence)
+        spacy_sentence = nlp(sentence)
+        #print(spacy_sentence)
         sentence_entities = spacy_sentence.ents
-        print("This sentence has "+str(len(sentence_entities)))
-        print(sentence)
-        print(sentence_entities)
+        entities_count = len(sentence_entities)
 
-        if len(sentence_entities) >= 2:
-            print('we found '+str(len(sentence_entities)))
-            #this is where im stopping for the night
-            #find all pairs of named entities
+        if entities_count >= 2:
+            #for every consecutive pair of entities, we get the pair (atomic candidate) and the connector
+            for i in range(entities_count-1):
+                ent1 = sentence_entities[i]
+                ent2 = sentence_entities[i+1]
+                A1 = int(ent1.start_char)
+                A2 = int(ent1.end_char)
+                B1 = int(ent2.start_char)
+                B2 = int(ent2.end_char)
+                atomic_candidate = sentence[A1:B2]
+                connector = sentence[A2:B1]
+
+                #check whether connector has verbs
+                spacy_connector = nlp(connector)
+                connector_has_verb = False
+                for token in spacy_connector:
+                    print(token.pos_)
+                    if token.pos_ == 'VERB':
+                        print('it is a verb!')
+                        connector_has_verb = True
+                        break
+
+                if connector_has_verb:
+                    pass
+                    #print('atomic_candidate',atomic_candidate)
+                    #print('connector',connector)
+                else:
+                    print('discarded candidate',atomic_candidate)
+
+                time.sleep(1)
+
+
+
             #find the connector between the pair, keep the part that is a verb
             #output the named entity pair and connector that is in this sentence
 
