@@ -6,4 +6,6 @@ Each data set is in a .txt file. Each line of the file contains the text of 1 ar
 
 The data is from the deepmind q&a dataset https://cs.nyu.edu/~kcho/DMQA/, which used articles from cnn and the daily mail to research q&a. Preprocessed data from https://github.com/JafferWilson/Process-Data-of-CNN-DailyMail was also available; this data produced all-lowercase .bin files that had similar cleaning and tokenization. We elected not to use these files because we may want to use some of those removed features to train/extend our summarizer.
 
-The complete data set can be found at https://drive.google.com/file/d/1I00XpcAUCbEgqpmR13Sp8_UcnOXzlQjP/view?usp=sharing
+SAMPLEDATA.txt contains the first 10000 lines from the training article text+summary data set. 
+
+The complete data set/files needed to run simple-baseline.py and score.py can be found at https://drive.google.com/file/d/1I00XpcAUCbEgqpmR13Sp8_UcnOXzlQjP/view?usp=sharing

@@ -3,7 +3,7 @@
 
 # Inputs:
 
-# goldfile) File containing gold summaries (sumfile output from simple-baseline)
+# goldfile) File containing only gold summaries
 # predfile) File containing predicted summaries
 # ngram) n-gram model to use (1, 2, 3 ...) (Should be less than the total number of words in any paragraph)
 
