@@ -68,10 +68,10 @@ for article in articles:
                         break
 
                 if connector_has_verb:
-                    print('atomic_candidate',atomic_candidate)
-                    print('connector',connector)
+                    #print('atomic_candidate',atomic_candidate)
+                    #print('connector',connector)
 
-                time.sleep(1)
+                #time.sleep(1)
 
             #output the named entity pair and connector that is in this sentence
 
