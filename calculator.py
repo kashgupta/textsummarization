@@ -61,8 +61,8 @@ for row_original, row_new in zip(original.split("\n"), new.split("\n")):
 		#print ("System List:", system_list)
 		#print ("Reference List:", reference_list)
 
-		system_2grams = create_ngrams(system_list,2)
-		reference_2grams = create_ngrams(reference_list,2)
+		system_2grams = create_ngrams(system_list,ngram)
+		reference_2grams = create_ngrams(reference_list,ngram)
 
 		rouge_2_recall, rouge_2_precision = rouge_metrics(system_2grams,reference_2grams)
 
@@ -72,13 +72,11 @@ for row_original, row_new in zip(original.split("\n"), new.split("\n")):
 		line = str(rouge_2_recall) + "\t" + str(rouge_2_precision) + "\n"
 		f.write(line)
 
-print ("Recall:", rrecall)
-print ("Precision:", rprecision)
 
 rrecall = np.mean(rrecall)
 rprecision = np.mean(rprecision)
-
 f_score = 2*rprecision*rrecall/(rprecision + rrecall)
 
-
+print ("Recall:", rrecall)
+print ("Precision:", rprecision)
 print ("FScore:", f_score)
