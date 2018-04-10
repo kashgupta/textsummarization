@@ -13,6 +13,7 @@ And the baseline would output:
 a louisiana family is fighting to protect its beloved pit bull from a "vicious dogs" ordinance
 
 The baseline can be run with python3 simple-baseline.py --goldfile FILE --predfile OUTFILE
+
 ex: python3 simple-baseline.py --goldfile sumdata/bothdev.txt --predfile base_dev_pred.txt
 
 On the test set, when evaluating with bigrams,
