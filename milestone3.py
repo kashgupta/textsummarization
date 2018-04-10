@@ -2,6 +2,7 @@ import spacy
 import argparse
 import re
 import numpy as np
+import time
 
 parser = argparse.ArgumentParser()
 
@@ -23,7 +24,7 @@ def clean_data(line):
     return " ".join(line)
 
 #using this for now because it's smaller than training set
-filename = "sumdata/bothdev.txt"
+filename = "../X_data_train_5K.txt"
 
 with open(filename,"r") as f:
 	data = f.read()
@@ -46,16 +47,17 @@ for article in articles:
         else:
             entities[ent_list[0]] = ' '.join(' ' + word for word in ent_list[1:len(ent_list)])
 
-    sent_concept_matrix = np.array();
+    sent_concept_matrix = np.array(entities);
     id_to_sentence = {id: sentence for (id, sentence) in zip(range(len(sentences)), sentences)}
     for sentence in sentences:
-        num_entities = 0
-        for word in sentence.split(' '):
-            if word in entities:
-                if entities[word] in sentence:
-                    num_entities += 1
-        if num_entities >= 2:
-            print('we found '+str(num_entities))
+        spacy_sentence = nlp(str(sentence))
+        sentence_entities = spacy_sentence.ents
+        print("This sentence has "+str(len(sentence_entities)))
+        print(sentence)
+        print(sentence_entities)
+
+        if len(sentence_entities) >= 2:
+            print('we found '+str(len(sentence_entities)))
             #this is where im stopping for the night
             #find all pairs of named entities
             #find the connector between the pair, keep the part that is a verb
