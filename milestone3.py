@@ -3,12 +3,19 @@ import argparse
 import re
 import numpy as np
 import time
+import datetime
+
+start_time = datetime.datetime.now()
 
 #parser = argparse.ArgumentParser()
 
 #To run spacy, in command line: pip install spacy
 #python -m spacy download en
+
 nlp = spacy.load('en')
+
+summary_length = 3
+
 
 #parser.add_argument('--goldfile', type=str, required=True)
 #parser.add_argument('--predfile', type=str, required=True)
@@ -24,12 +31,14 @@ def clean_data(line):
     return " ".join(line)
 
 #using this for now because it's smaller than training set
-filename = "X_data_train_5K.txt"
+filename = "../X_data_train_5K.txt"
 
 with open(filename,"r") as f:
 	data = f.read()
 
-articles = data.split("\n")[:100]
+#WE are only doing the first 200 articles, so that it runs quickly
+number_articles = 200
+articles = data.split("\n")[:number_articles]
 
 y_pred = []
 
@@ -37,7 +46,7 @@ y_pred = []
 
 article_matrix = []
 sentence_index_dict = {}
-count = 0
+sentence_num = 0
 
 for article in articles:
     doc = nlp(article)
@@ -45,10 +54,7 @@ for article in articles:
     article_dict = {}          # ADDED
     #id_to_sentence = {id: sentence for (id, sentence) in zip(range(len(sentences)), sentences)}
     for sentence in sentences:
-        sentence_index_dict[count] = sentence
-        #article_dict[count]["atomic_candidate"] = []
-        #article_dict[count]["connector"] = []
-        #extract all entities for sentence
+        sentence_index_dict[sentence_num] = sentence
         sentence = str(sentence)
         spacy_sentence = nlp(sentence)
         sentence_entities = spacy_sentence.ents
@@ -75,30 +81,40 @@ for article in articles:
                         break
 
                 if connector_has_verb:
-                    if count not in article_dict.keys():
-                        article_dict[count] = {}
-                        article_dict[count]["atomic_candidate"] = 0
-                        article_dict[count]["connector"] = 0
+                    if sentence_num not in article_dict.keys():
+                        article_dict[sentence_num] = 0
 
-                    article_dict[count]["atomic_candidate"] += 1 # ADDED
-                    article_dict[count]["connector"] += 1  # ADDED
+                    article_dict[sentence_num] += 1 # ADDED
 #                    print('atomic_candidate',atomic_candidate)
 #                    print('connector',connector)
-        count += 1
+        sentence_num += 1
     article_matrix.append(article_dict) # ADDED
 #                time.sleep(1)
-print(len(article_matrix))
-
-            #output the named entity pair and connector that is in this sentence
-
-#     summary = ''
-#     y_pred.append(summary)
-
-# y_pred = [clean_data(summary) for summary in y_pred]
+print(article_matrix)
 
 
-# with open("baseline.txt","w") as f:
-# 	for line in y_pred:
-# 		f.write(line)
-# 		f.write("\n")
+for sentence_dic in article_matrix:
+    #first = max(sentence_dic.iteritems(), key=operator.itemgetter(1))[0]
+    sorted_dic = sorted(sentence_dic, key=lambda k: sentence_dic[k])
+    
+    keys = sorted_dic[:summary_length]
+
+    temp_summary = ""
+    for key in keys:
+        temp_summary += str(sentence_index_dict[key])
+
+    y_pred.append(temp_summary)
+
+
+with open("m3_baseline.txt","w") as f:
+	for line in y_pred:
+		f.write(line)
+		f.write("\n")
+
+
+end_time = datetime.datetime.now()
+total_time = end_time - start_time
+
+print('total running time for '+str(number_articles)+" articles is "+str(total_time))
+
 
