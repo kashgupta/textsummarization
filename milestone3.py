@@ -3,6 +3,7 @@ import argparse
 import re
 import numpy as np
 import time
+from collections import Counter
 import datetime
 
 start_time = datetime.datetime.now()
@@ -33,7 +34,18 @@ def clean_data(line):
 #using this for now because it's smaller than training set
 filename = "../X_data_train_5K.txt"
 
-with open(filename,"r") as f:
+event_hyponyms_file = 'event_hyponyms.txt'
+activity_hyponyms_file = 'activity_hyponyms.txt'
+
+f_events = open(event_hyponyms_file, 'r')
+event_hyponyms = set([line.rstrip('\n').lower() for line in f_events])
+
+f_activities = open(activity_hyponyms_file, 'r')
+activity_hyponyms = set([line.rstrip('\n').lower() for line in f_activities])
+
+action_nouns = event_hyponyms.union(activity_hyponyms)
+
+with open(filename, "r") as f:
 	data = f.read()
 
 #WE are only doing the first 200 articles, so that it runs quickly
@@ -48,20 +60,46 @@ article_matrix = []
 sentence_index_dict = {}
 sentence_num = 0
 
+cnt = Counter()
+# find top 10 most frequent nouns
+for article in articles:
+    doc = nlp(article)
+    for tok in doc:
+        if tok.pos_ == 'NOUN':
+            cnt[str(tok).lower()] += 1
+print(cnt.most_common(10))
+
+top10nouns = dict(cnt.most_common(10))
+print(top10nouns)
+
 for article in articles:
     doc = nlp(article)
     sentences = list(doc.sents)
     article_dict = {}          # ADDED
-    #id_to_sentence = {id: sentence for (id, sentence) in zip(range(len(sentences)), sentences)}
+    # id_to_sentence = {id: sentence for (id, sentence) in zip(range(len(sentences)), sentences)}
     for sentence in sentences:
         sentence_index_dict[sentence_num] = sentence
         sentence = str(sentence)
         spacy_sentence = nlp(sentence)
-        sentence_entities = spacy_sentence.ents
+        entities_list = list(spacy_sentence.ents)
+        entities_strings = [str(ent) for ent in entities_list]
+        # entities_set = set(entities_list)
+
+        sentence_words = sentence.split(' ')
+        # scan for top 10 nouns
+        top10_list = []
+
+        for i in range(len(spacy_sentence)):
+            word_str = str(spacy_sentence[i]).lower()
+            if word_str in top10nouns.keys() and word_str not in entities_strings:
+                span_noun = spacy_sentence[i:i+1]
+                top10_list.append(span_noun)
+
+        sentence_entities = tuple(list(entities_list + top10_list))
         entities_count = len(sentence_entities)
 
         if entities_count >= 2:
-            #for every consecutive pair of entities, we get the pair (atomic candidate) and the connector
+            # for every consecutive pair of entities, we get the pair (atomic candidate) and the connector
             for i in range(entities_count-1):
                 ent1 = sentence_entities[i]
                 ent2 = sentence_entities[i+1]
@@ -72,11 +110,11 @@ for article in articles:
                 atomic_candidate = sentence[A1:B2]
                 connector = sentence[A2:B1]
 
-                #check whether connector has verbs
+                # check whether connector has verbs
                 spacy_connector = nlp(connector)
                 connector_has_verb = False
                 for token in spacy_connector:
-                    if token.pos_ == 'VERB':
+                    if token.pos_ == 'VERB' or (token.pos_ == 'NOUN' and str(token).lower() in action_nouns):
                         connector_has_verb = True
                         break
 
