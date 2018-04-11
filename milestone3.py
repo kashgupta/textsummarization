@@ -34,7 +34,18 @@ def clean_data(line):
 #using this for now because it's smaller than training set
 filename = "../X_data_train_5K.txt"
 
-with open(filename,"r") as f:
+event_hyponyms_file = 'event_hyponyms.txt'
+activity_hyponyms_file = 'activity_hyponyms.txt'
+
+f_events = open(event_hyponyms_file, 'r')
+event_hyponyms = set([line.rstrip('\n').lower() for line in f_events])
+
+f_activities = open(activity_hyponyms_file, 'r')
+activity_hyponyms = set([line.rstrip('\n').lower() for line in f_activities])
+
+action_nouns = event_hyponyms.union(activity_hyponyms)
+
+with open(filename, "r") as f:
 	data = f.read()
 
 #WE are only doing the first 200 articles, so that it runs quickly
@@ -103,7 +114,7 @@ for article in articles:
                 spacy_connector = nlp(connector)
                 connector_has_verb = False
                 for token in spacy_connector:
-                    if token.pos_ == 'VERB':
+                    if token.pos_ == 'VERB' or (token.pos_ == 'NOUN' and str(token).lower() in action_nouns):
                         connector_has_verb = True
                         break
 

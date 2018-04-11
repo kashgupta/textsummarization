@@ -2,8 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e4b4d476-4580-41aa-96c3-3e557a71f056" name="Default" comment="">
-      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change beforePath="$PROJECT_DIR$/m3_baseline.txt" afterPath="$PROJECT_DIR$/m3_baseline.txt" />
       <change beforePath="$PROJECT_DIR$/milestone3.py" afterPath="$PROJECT_DIR$/milestone3.py" />
     </list>
@@ -19,8 +18,8 @@
       <file leaf-file-name="milestone3.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/milestone3.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="296">
-              <caret line="134" column="0" lean-forward="true" selection-start-line="134" selection-start-column="0" selection-end-line="134" selection-end-column="0" />
+            <state relative-caret-position="209">
+              <caret line="107" column="33" lean-forward="false" selection-start-line="107" selection-start-column="33" selection-end-line="107" selection-end-column="33" />
               <folding>
                 <element signature="e#0#12#0" expanded="true" />
               </folding>
@@ -33,6 +32,7 @@
   <component name="FindInProjectRecents">
     <findStrings>
       <find>y_pred</find>
+      <find>clean_data</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -195,8 +195,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/milestone3.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="296">
-          <caret line="134" column="0" lean-forward="true" selection-start-line="134" selection-start-column="0" selection-end-line="134" selection-end-column="0" />
+        <state relative-caret-position="209">
+          <caret line="107" column="33" lean-forward="false" selection-start-line="107" selection-start-column="33" selection-end-line="107" selection-end-column="33" />
           <folding>
             <element signature="e#0#12#0" expanded="true" />
           </folding>
