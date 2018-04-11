@@ -60,53 +60,81 @@ article_matrix = []
 sentence_index_dict = {}
 sentence_num = 0
 
-cnt = Counter()
-# find top 10 most frequent nouns
+# cnt_all = []
+# # find top 10 most frequent nouns
+# for article in articles:
+#     cnt = Counter()
+#     doc = nlp(article)
+#     for tok in doc:
+#         if tok.pos_ == 'NOUN':
+#             cnt[str(tok).lower()] += 1
+#     cnt_all.append(dict(cnt.most_common(10)))
+
 for article in articles:
     doc = nlp(article)
+    
+    article_dict = {}          # ADDED
+
+    #FIND TOP 10 NOUNS FOR THIS ARTICLE
+    cnt = Counter()
     for tok in doc:
         if tok.pos_ == 'NOUN':
-            cnt[str(tok).lower()] += 1
-print(cnt.most_common(10))
+            #print('NOUN',type(tok))
+            cnt[tok] += 1
 
-top10nouns = dict(cnt.most_common(10))
-print(top10nouns)
+    top10_dict = dict(cnt.most_common(10))
+    top10_list = list(top10_dict.keys())
 
-for article in articles:
-    doc = nlp(article)
     sentences = list(doc.sents)
-    article_dict = {}          # ADDED
     # id_to_sentence = {id: sentence for (id, sentence) in zip(range(len(sentences)), sentences)}
     for sentence in sentences:
         sentence_index_dict[sentence_num] = sentence
         sentence = str(sentence)
         spacy_sentence = nlp(sentence)
+
         entities_list = list(spacy_sentence.ents)
-        entities_strings = [str(ent) for ent in entities_list]
+        
         # entities_set = set(entities_list)
 
+        #make list of both entities and top 10 nouns
+        full_entities_list = entities_list + top10_list
+        full_entities_string = [str(ent) for ent in full_entities_list]
+
         sentence_words = sentence.split(' ')
-        # scan for top 10 nouns
-        top10_list = []
 
-        for i in range(len(spacy_sentence)):
-            word_str = str(spacy_sentence[i]).lower()
-            if word_str in top10nouns.keys() and word_str not in entities_strings:
-                span_noun = spacy_sentence[i:i+1]
-                top10_list.append(span_noun)
+        full_entities_ordered_list = []
 
-        sentence_entities = tuple(list(entities_list + top10_list))
-        entities_count = len(sentence_entities)
+        #GETS THE ENTITIES AND TOP 10 NOUNS IN THE ORDER IN WHICH THEY APPEAR (ESSENTIAL FOR NEXT STEP)
+
+        for entity in full_entities_list:
+            if str(entity) in sentence:
+                full_entities_ordered_list.append(entity)
+
+
+        #RENAME AND COUNT
+        sentence_entities = full_entities_ordered_list
+        entities_count = len(full_entities_ordered_list)
 
         if entities_count >= 2:
             # for every consecutive pair of entities, we get the pair (atomic candidate) and the connector
             for i in range(entities_count-1):
                 ent1 = sentence_entities[i]
                 ent2 = sentence_entities[i+1]
-                A1 = int(ent1.start_char)
-                A2 = int(ent1.end_char)
-                B1 = int(ent2.start_char)
-                B2 = int(ent2.end_char)
+                if type(ent1) == spacy.tokens.token.Token:
+                    A1 = int(ent1.idx)
+                    A2 = int(ent1.idx)+int(len(ent1))
+                else:
+                    A1 = int(ent1.start_char)
+                    A2 = int(ent1.end_char)
+
+                if type(ent2) == spacy.tokens.token.Token:
+                    B1 = int(ent2.idx)
+                    B2 = int(ent2.idx)+int(len(ent2))
+                else:
+                    B1 = int(ent2.start_char)
+                    B2 = int(ent2.end_char)
+
+                
                 atomic_candidate = sentence[A1:B2]
                 connector = sentence[A2:B1]
 
