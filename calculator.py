@@ -58,9 +58,6 @@ for row_original, row_new in zip(original.split("\n"), new.split("\n")):
 		system_list = row_original.split(" ")
 		reference_list = row_new.split(" ")
 
-		#print ("System List:", system_list)
-		#print ("Reference List:", reference_list)
-
 		system_2grams = create_ngrams(system_list,ngram)
 		reference_2grams = create_ngrams(reference_list,ngram)
 
