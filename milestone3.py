@@ -1,115 +1,122 @@
 import spacy
 import argparse
-import re
 import numpy as np
-import time
 from collections import Counter
 import datetime
 
 start_time = datetime.datetime.now()
-
-#parser = argparse.ArgumentParser()
+parser = argparse.ArgumentParser()
 
 #To run spacy, in command line: pip install spacy
 #python -m spacy download en
 
 nlp = spacy.load('en')
 
-summary_length = 3
+parser.add_argument('--test_file', type=str, required=True, dest = 'test_file')
+parser.add_argument('--pred_file', type=str, required=True, dest = 'output_file')
+parser.add_argument('--summary_length', type=int, required=True, dest = 'summary_length')
+parser.add_argument('--events', type=str, required=True, dest = 'events')
+parser.add_argument('--activities', type=str, required=True, dest = 'activities')
+
+args = parser.parse_args()
+
+summary_length = args.summary_length
 
 
-#parser.add_argument('--goldfile', type=str, required=True)
-#parser.add_argument('--predfile', type=str, required=True)
+def generate_actions_nouns(events = args.events, activities = args.events):
 
-#args = parser.parse_args()
+    event_hyponyms_file = 'event_hyponyms.txt'
+    activity_hyponyms_file = 'activity_hyponyms.txt'
 
-def clean_data(line):
-    line = line.split()
-    line = [word.lower() for word in line]
-    line = [re.sub("[,-\.!?]"," ",word) for word in line] # Remove punctuation in the text
-    #line = [re.sub("[\(][a-zA-z0-9]*[\)]"," ", word) for word in line] # Remove words within brackets
-    #line = [re.sub("[0-9]*[.]*[0-9]*"," ", word) for word in line]
-    return " ".join(line)
+    f_events = open(event_hyponyms_file, 'r')
+    event_hyponyms = set([line.rstrip('\n').lower() for line in f_events])
+    f_activities = open(activity_hyponyms_file, 'r')
+    activity_hyponyms = set([line.rstrip('\n').lower() for line in f_activities])
 
-#using this for now because it's smaller than training set
-filename = "../X_data_train_5K.txt"
+    action_nouns = event_hyponyms.union(activity_hyponyms)
 
-event_hyponyms_file = 'event_hyponyms.txt'
-activity_hyponyms_file = 'activity_hyponyms.txt'
+    return action_nouns
 
-f_events = open(event_hyponyms_file, 'r')
-event_hyponyms = set([line.rstrip('\n').lower() for line in f_events])
+def get_character_positions(ent1, ent2):
+    #works both for tokens and spans (spacy classes)
+    ent1 = sentence_entities[i]
+    ent2 = sentence_entities[i+1]
+    if type(ent1) == spacy.tokens.token.Token:
+        A1 = int(ent1.idx)
+        A2 = int(ent1.idx)+int(len(ent1))
+    else:
+        A1 = int(ent1.start_char)
+        A2 = int(ent1.end_char)
 
-f_activities = open(activity_hyponyms_file, 'r')
-activity_hyponyms = set([line.rstrip('\n').lower() for line in f_activities])
+    if type(ent2) == spacy.tokens.token.Token:
+        B1 = int(ent2.idx)
+        B2 = int(ent2.idx)+int(len(ent2))
+    else:
+        B1 = int(ent2.start_char)
+        B2 = int(ent2.end_char)
 
-action_nouns = event_hyponyms.union(activity_hyponyms)
+    return A1, A2, B1, B2
 
-with open(filename, "r") as f:
+action_nouns = generate_actions_nouns()
+
+
+with open(args.test_file, "r") as f:
 	data = f.read()
 
-#WE are only doing the first 200 articles, so that it runs quickly
-number_articles = 200
+#WE ARE ONLY USING THE FIRST 1000 ARTICLES - WITH 1000 ARTICLES, IT RUNS IN 4 MINUTES.
+number_articles = 1000
 articles = data.split("\n")[:number_articles]
 
 y_pred = []
-
-#https://spacy.io/usage/linguistic-features
-
-article_matrix = []
-sentence_index_dict = {}
+y_pred_2 = []
 sentence_num = 0
 
-# cnt_all = []
-# # find top 10 most frequent nouns
-# for article in articles:
-#     cnt = Counter()
-#     doc = nlp(article)
-#     for tok in doc:
-#         if tok.pos_ == 'NOUN':
-#             cnt[str(tok).lower()] += 1
-#     cnt_all.append(dict(cnt.most_common(10)))
-
+counter_article = 0
 for article in articles:
+    counter_article += 1
+    print(counter_article)
     doc = nlp(article)
-    
-    article_dict = {}          # ADDED
 
     #FIND TOP 10 NOUNS FOR THIS ARTICLE
     cnt = Counter()
     for tok in doc:
         if tok.pos_ == 'NOUN':
-            #print('NOUN',type(tok))
             cnt[tok] += 1
 
     top10_dict = dict(cnt.most_common(10))
     top10_list = list(top10_dict.keys())
 
     sentences = list(doc.sents)
-    # id_to_sentence = {id: sentence for (id, sentence) in zip(range(len(sentences)), sentences)}
+
+    article_matrix = []
+    relations_dic = {}
+    relation_connector_matrix = []
+
+    atomic_events_dict = {}
+
+    atomic_events_per_article = {} # JUST ADDED
+    atomic_event_index = 0 # JUST ADDED
+    connector_dict = {}
+    relation_dict = {}
+    connector_count = 0
+    relation_count = 0
+
+    connector_relation_pairs = []
+
     for sentence in sentences:
-        sentence_index_dict[sentence_num] = sentence
+        sentence_matrix = []
+        sentence_atomic_events = []
+
         sentence = str(sentence)
         spacy_sentence = nlp(sentence)
-
         entities_list = list(spacy_sentence.ents)
         
-        # entities_set = set(entities_list)
-
         #make list of both entities and top 10 nouns
         full_entities_list = entities_list + top10_list
         full_entities_string = [str(ent) for ent in full_entities_list]
 
-        sentence_words = sentence.split(' ')
-
-        full_entities_ordered_list = []
-
         #GETS THE ENTITIES AND TOP 10 NOUNS IN THE ORDER IN WHICH THEY APPEAR (ESSENTIAL FOR NEXT STEP)
-
-        for entity in full_entities_list:
-            if str(entity) in sentence:
-                full_entities_ordered_list.append(entity)
-
+        full_entities_ordered_list = [ent for ent in full_entities_list if str(ent) in sentence]
 
         #RENAME AND COUNT
         sentence_entities = full_entities_ordered_list
@@ -120,20 +127,15 @@ for article in articles:
             for i in range(entities_count-1):
                 ent1 = sentence_entities[i]
                 ent2 = sentence_entities[i+1]
-                if type(ent1) == spacy.tokens.token.Token:
-                    A1 = int(ent1.idx)
-                    A2 = int(ent1.idx)+int(len(ent1))
-                else:
-                    A1 = int(ent1.start_char)
-                    A2 = int(ent1.end_char)
+                A1, A2, B1, B2 = get_character_positions(ent1, ent2)
 
-                if type(ent2) == spacy.tokens.token.Token:
-                    B1 = int(ent2.idx)
-                    B2 = int(ent2.idx)+int(len(ent2))
-                else:
-                    B1 = int(ent2.start_char)
-                    B2 = int(ent2.end_char)
+                relation = (ent1, ent2)
 
+                #CREATE A DICTIONARY AND A RELATION-CONNECTOR MATRIX
+                if relation not in relations_dic.keys():
+                    relations_dic[relation] = 1
+                else:
+                    relations_dic[relation] += 1
                 
                 atomic_candidate = sentence[A1:B2]
                 connector = sentence[A2:B1]
@@ -146,34 +148,87 @@ for article in articles:
                         connector_has_verb = True
                         break
 
+                #CONDITION TO DETERMINE IF ATOMIC CANDIDATE IS ATOMIC EVENT
+                connector_relation_pair = []
                 if connector_has_verb:
-                    if sentence_num not in article_dict.keys():
-                        article_dict[sentence_num] = 0
+                    sentence_atomic_events.append(atomic_candidate)
+                    if connector not in connector_dict.keys():
+                        connector_dict[connector] = connector_count
+                        connector_count += 1
+                    if relation not in relation_dict.keys():
+                        relation_dict[relation] = relation_count
+                        relation_count += 1
+                    atomic_events_dict[atomic_candidate] = (connector_dict[connector],relation_dict[relation])
+                    connector_relation_pair.append((connector,relation))
+                    connector_relation_pairs.append(connector_relation_pair)
 
-                    article_dict[sentence_num] += 1 # ADDED
-#                    print('atomic_candidate',atomic_candidate)
-#                    print('connector',connector)
+
+                    if atomic_candidate not in atomic_events_per_article.keys():
+                        atomic_events_per_article[atomic_candidate] = atomic_event_index
+                        atomic_event_index += 1
+
+        sentence_matrix = [int(ae in sentence_atomic_events) for ae in atomic_events_per_article.keys()]
+        article_matrix.append(sentence_matrix)
         sentence_num += 1
-    article_matrix.append(article_dict) # ADDED
-#                time.sleep(1)
-print(article_matrix)
+
+    #GENERATE SENTENCE TIMES WEIGHTED ATOMIC EVENT MATRIX
+
+    connector_relation_matrix = np.zeros((len(connector_dict),len(relation_dict)))
+
+    for element in connector_relation_pairs:
+        connector_relation_matrix[connector_dict[element[0][0]]][relation_dict[element[0][1]]] += 1
 
 
-for sentence_dic in article_matrix:
-    #first = max(sentence_dic.iteritems(), key=operator.itemgetter(1))[0]
-    sorted_dic = sorted(sentence_dic, key=lambda k: sentence_dic[k])
-    
-    keys = sorted_dic[:summary_length]
-
-    temp_summary = ""
-    for key in keys:
-        temp_summary += str(sentence_index_dict[key])
-
-    y_pred.append(temp_summary)
+    vector = np.sum(connector_relation_matrix, axis =1)
+    norm = np.reshape(vector,(len(vector),1))
 
 
-with open("m3_baseline.txt","w") as f:
-	for line in y_pred:
+    connector_relation_matrix = np.transpose(np.transpose(connector_relation_matrix)/vector)
+
+    sentence_row_size = [len(article) for article in article_matrix]
+    max_row_size = np.max(sentence_row_size)
+
+    #make all vectors in article_matrix of equal length
+    for i in range(len(article_matrix)):
+        length = len(article_matrix[i])
+        while length < max_row_size:
+            article_matrix[i].append(0)
+            length += 1
+
+
+    #NORMALIZE COUNT OF RELATIONS
+    A = np.array(list(relations_dic.values()))
+    B = 1.0*np.sum(np.array(list(relations_dic.values())))
+    normalised_relations_array = A/B
+
+
+    article_matrix = np.array(article_matrix)
+    sentence_scores = []
+    for i in range(len(article_matrix)):
+        temp_sum = 0
+        for j in range(len(article_matrix[i])):
+            for key in atomic_events_per_article.keys():
+                if atomic_events_per_article[key] == j:
+                    current_atomic_candidate = key
+                    break
+            index_1 = atomic_events_dict[current_atomic_candidate][0]
+            index_2 = atomic_events_dict[current_atomic_candidate][1]
+            mat = connector_relation_matrix[index_1][index_2]
+            temp_sum += article_matrix[i][j]*mat
+
+        sentence_scores.append(temp_sum)
+
+    sentence_scores = np.array(sentence_scores)
+    sorted_index_sentences = sentence_scores.argsort()[-summary_length:]
+
+    article_summary_2 = ""
+    for i in range(summary_length):
+        article_summary_2 += str(sentences[sorted_index_sentences[i]])
+    y_pred_2.append(article_summary_2)
+
+
+with open(args.output_file,"w") as f:
+	for line in y_pred_2:
 		f.write(line)
 		f.write("\n")
 
