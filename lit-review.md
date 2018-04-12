@@ -10,7 +10,7 @@
 
 ### Implementation
 
-We chose to implement the atomic event-based published baseline because we found that three of the papers we read (event-based, QR matrix decomposition, and supervised+semi-supervised) all had a similar method of extracting events (or terms) and choosing sentences based on how many events they covered. The event-based baseline (with the static greedy algorithm) was ultimately the simplest and most straightforward to implement; the supervised+semi-supervised baseline combined events and three other types of features and QR matrix decomposition involved mapping to wordnet senses and an algorithm that required graphing a histogram. We will consider features from these papers as extension ideas for future milestones.
+We chose to implement the atomic event-based published baseline because we found that three of the papers we read (event-based, QR matrix decomposition, and supervised+semi-supervised) all had a similar method of extracting events (or terms) and choosing sentences based on how many events they covered. The event-based baseline (with the static greedy algorithm) as well as being a straightforward model, is an unsupervised baseline, and there were many unsupervised methods used in the literature. Thus, we thought it would be best to build off an unsupervised model. In addition, this model involved examining many linguistic components of the text, such as POS and entity recognition, which we thought would be useful and interesting to work with. We will consider features from the other= papers as extension ideas for future milestones.
 
 ---
 
