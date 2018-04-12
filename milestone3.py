@@ -63,18 +63,16 @@ action_nouns = generate_actions_nouns()
 with open(args.test_file, "r") as f:
 	data = f.read()
 
-#WE ARE ONLY USING THE FIRST 1000 ARTICLES - WITH 1000 ARTICLES, IT RUNS IN 4 MINUTES.
-number_articles = 1000
+#WE ARE ONLY USING THE FIRST 500 ARTICLES
+number_articles = 500
 articles = data.split("\n")[:number_articles]
 
 y_pred = []
 y_pred_2 = []
 sentence_num = 0
 
-counter_article = 0
 for article in articles:
-    counter_article += 1
-    print(counter_article)
+
     doc = nlp(article)
 
     #FIND TOP 10 NOUNS FOR THIS ARTICLE
