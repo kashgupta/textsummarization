@@ -11,7 +11,8 @@ parser = argparse.ArgumentParser()
 #To run spacy, in command line: pip install spacy
 #python -m spacy download en
 
-nlp = spacy.load('en')
+nlp = spacy.load('en', disable=['parser', 'tagger', 'textcat', 'ner'])
+nlp.add_pipe(nlp.create_pipe('sentencizer'))
 
 parser.add_argument('-d', type=str, required=True, dest = 'document')
 parser.add_argument('-o', type=str, required=True, dest = 'output')
@@ -19,18 +20,16 @@ parser.add_argument('-l', type=int, required=True, dest = 'summary_length')
 
 args = parser.parse_args()
 
-def get_sentences(document):
+def get_sentences(article):
 
-	# Input:	Path of the original document
+	# Input:	riginal document
 	# Returns:	List of sentences, sgmented using spaCy
 
-	doc = open(document, 'r')
 	sentences = []
 
-	for paragraph in doc:
-		tokens = nlp(paragraph)
-		for sentence in tokens.sents:
-			sentences.append(str(sentence))
+	tokens = nlp(article)
+	for sentence in tokens.sents:
+		sentences.append(str(sentence))
 
 	return sentences
 
@@ -77,13 +76,13 @@ def sentence_weights(sentences, word_weights, n):
 
 	return sorted_x
 
-def summarize(document, n):
+def summarize(article, n):
 
-	# Inputs:	Path of the original document
+	# Inputs:	Original document
 	# 			Number of sentences required in the summary
 	# Returns:	The summary of the document
 
-	sentences = get_sentences(document)
+	sentences = get_sentences(article)
 	word_weights_dict = word_weights(sentences)
 	summary_sentences = sentence_weights(sentences, word_weights_dict, n)
 
@@ -106,9 +105,15 @@ Outputs:		Appends the summary to output file
 Example usage:	python3 extension.py -d original_document.txt -l 3 -o computed_summaries.txt
 '''
 
-predicted_summary = summarize(args.document, args.summary_length)
+predicted_summary = summarize(article, args.summary_length)
 
-with open(args.output,"a") as f:
+
+R = open(args.document, "r")
+W = open(args.output,"a")
+
+for article in R:
+	predicted_summary = summarize(article, args.summary_length)
+
 	for line in predicted_summary:
 		f.write(line)
-	f.write("\n")
+		f.write("\n")
