@@ -1,0 +1,528 @@
+accident
+achievement
+acme 
+act
+act of god
+address
+adventure
+affair
+affliction
+after the fact
+aftereffect
+aftermath
+agitation
+ague
+al fresco
+alteration
+announcement
+apocalypse
+appearance
+appointment
+arrest
+arrival
+arrive
+as a result
+ascendancy
+ascent
+aspect
+assignation
+assignment
+at that moment
+at that time
+attempt
+baby shower
+backwash
+ballot
+bandwagon effect
+bankruptcy sale
+bargain
+barter
+bazaar
+beating
+because of that
+befall
+better late than never
+blast
+blaze
+blow
+branch
+break
+breakage
+brisance
+burst
+bustle
+butterfly effect
+by-product
+byproduct
+calamity
+call
+carnival
+casual meeting
+cataclysm
+catastrophe
+catastrophic event
+cause
+cavalcade
+celebrate
+cell cycle
+ceremonial
+ceremony
+cessation
+chance
+change
+charge
+chase
+check
+chill
+choice
+christmassy
+circle
+circumstance
+circumstances
+clearance
+click
+climacteric
+climax
+coattails effect
+coincidence
+collision
+combustion
+come
+come about
+come to pass
+comedy
+coming soon
+commerce
+commotion
+competition
+conclusion
+conflagration
+conformity
+consensus
+consequence
+contest
+contingency
+continuation
+convention
+convulsion
+Coriolis effect
+count
+course
+crash
+crisis
+critique
+cry
+culmination
+curtains
+custom
+cycle
+damage
+damp
+danger
+date
+dawdling
+dead heat
+dealing
+death
+debacle
+decease
+defeat
+dejection
+delay
+delaying
+delivery
+demise
+dent
+depart
+dependent
+depression
+destiny
+destruction
+detriment
+die
+diffusion
+disadvantage
+disappointment
+disaster
+discharge
+discontinuity
+discount
+discouragement
+discourse
+disorder
+displacement
+display
+dissertation
+disturbance
+domino effect
+domino_effect
+doom
+downfall
+drama
+draw
+drill
+dumping
+dying
+effect
+effort
+election
+emanation
+emission
+end
+endeavour
+engagement
+epiphany
+episode
+eruption
+essay
+evil
+examination
+exchange
+excitement
+excursion
+exercise
+exhibit
+exhibition
+expansion
+expedition
+experience
+expiration
+expire
+exploration
+explosion
+exposition
+exposure
+extension
+extremity
+eyesore
+face
+fact
+failure
+fair
+Fall
+falling action
+fallout
+fast-paced
+fate
+festival
+fire
+fit
+flame
+flash
+flashback
+flight
+flow
+flying
+foreshadowing
+form
+formality
+formula
+front
+funeral
+game
+game changer
+gap
+ground
+group action
+halloween
+halt
+happen
+happening
+harangue
+harm
+harvest
+haste
+hazard
+head
+hesitation
+hiatus
+hit
+hitch
+holocaust
+human action
+human activity
+hunt
+hurry
+hysteria
+if so
+impact
+impairment
+in the event
+in which case
+incident
+inciting incident
+inferno
+influence
+inquiry
+insecurity
+inspection
+instant
+interim
+intermission
+interruption
+interview
+investigation
+issue
+jaunt
+jeopardy
+jerk
+journey
+jump
+juncture
+junket
+karma
+kismet
+knock-on effect
+knockout
+lag
+lecture
+lesson
+liability
+life changing
+life-changing
+liturgy
+loitering
+long awaited
+loss
+lull
+makeup
+manifestation
+march
+market
+materialisation
+materialization
+meet
+might-have-been
+migration
+military conflict
+miracle
+mischance
+mischief
+misery
+misfortune
+mishap
+mistake
+moment
+mounting
+natural event
+new year
+next thing
+noel
+nonevent
+occasion
+occur
+occurrence
+occurrent
+offset
+offshoot
+offspring
+omen
+opening
+oral interpretation
+oration
+orbit
+ostentation
+outcome
+outgrowth
+outline
+outpouring
+overflowing
+overthrow
+overturn
+overview
+pageant
+pain
+panel
+parade
+paradox
+party
+pass away
+pause
+performance
+period
+phenomenon
+photo finish
+photographer
+pilgrimage
+pinnacle
+pitfall
+place
+placebo effect
+plan
+play
+play music
+poll
+position
+position effect
+post-date
+posttest
+practice
+predicament
+preparation
+presentation
+procession
+proclamation
+procrastination
+product
+production
+program
+progression
+promulgation
+prospect
+purchase
+pursuit
+pyre
+quake
+quest
+quick visit
+race
+radiation
+reading
+reason
+reception
+recess
+recitation
+reduction
+rendezvous
+repeat
+repercussion
+repetition
+repose
+research
+respite
+response
+rest
+result
+reverberation
+reverse
+review
+revolution
+rise
+rising
+rite
+ritual
+roster
+round
+ruin
+rush
+sale
+scare
+scene
+scheme
+season
+see
+seism
+self-presentation
+sending
+series
+sermon
+session
+set-back
+shake
+shift
+shiver
+shock
+show
+shudder
+side effect
+sight
+situation
+skid
+slide
+slip
+smash
+soaring
+social
+social event
+soiree
+sojourn
+solo performance
+sorrow
+spasm
+special
+spectacle
+speech
+spillover
+spoil
+spread
+stalemate
+stand-off
+standstill
+start
+stay
+stir
+stop
+storm
+stratagem
+strategy
+strife
+study
+stumble
+substitution
+succession
+suffrage
+summit
+survey
+suspension
+swap
+tabulation
+take place
+tally
+tea party
+termination
+then
+therewith
+tie
+top dog
+tour
+trade
+traffic
+tragedy
+trajectory
+transfer
+transformation
+transpire
+trauma
+travel
+tremble
+tremor
+trial
+trick
+trip
+tripped on by rosy wings
+triumph
+tryst
+tumult
+turmoil
+turn
+turn out
+turn up
+turn-up for the books
+turning point
+twitch
+undertaking
+unforeseen circumstance
+upgrade
+upheaval
+uproar
+upset
+upsurge
+variation
+veneer
+venture
+vibration
+view
+vigil
+visit
+vote
+voting
+voyage
+wait
+wake
+wallop
+waste
+wave
+worst
+wreckage
+zap
+zenith
