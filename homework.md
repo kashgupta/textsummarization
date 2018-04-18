@@ -1,5 +1,5 @@
 # Text Summarization
-Text summarization is the task of getting the most important ideas from a document or text. There are two types of text summarization: extractive and abstractive. Extractive text summarization involved taking sections of text directly from the document as the summary, while abstractive summarization rewrites or paraphrases the document/its main ideas. In this assignment, we will focus on extractive text summarization. You will implement:
+Text summarization is the task of getting the most important ideas from a document or text. There are two types of text summarization: extractive and abstractive. Extractive text summarization involves taking sections of text directly from the document as the summary, while abstractive summarization rewrites or paraphrases the document/its main ideas. In this assignment, we will focus on extractive text summarization. You will implement:
 
 * A simple, rule-based summarizer
 * An atomic-event based summarizer
