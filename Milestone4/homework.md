@@ -54,7 +54,7 @@ Ideas for potential techniques include:
 * Implementing a supervised extraction method using the training data
 
 # Evaluation:
-The evaluation script, score.py, generates the precision, recall, and f-score base on ROUGE. ROUGE is a metric that compares n-grams that appear in the predicted summary with those that appear in the gold summary. In this assignment, we consider the ROUGE-1 and ROUGE-2 score (unigrams and bigrams). [This](http://rxnlp.com/how-rouge-works-for-evaluation-of-summarization-tasks/) explains how the ROUGE precision, recall, and f-scire score is calculated for a single summary. The eval script calculates the ROUGE score over every summary in the test set and outputs the average. You can run the eval script with the following command line code:
+The evaluation script, score.py, generates the precision, recall, and f-score base on ROUGE. ROUGE is a metric that compares n-grams that appear in the predicted summary with those that appear in the gold summary. In this assignment, we consider the ROUGE-1 and ROUGE-2 score (unigrams and bigrams). [This](http://rxnlp.com/how-rouge-works-for-evaluation-of-summarization-tasks/) explains how the ROUGE precision, recall, and f-score is calculated for a single summary. The eval script calculates the ROUGE score over every summary in the test set and outputs the average. You can run the eval script with the following command line code:
 
 ```sh
 $ python3 score.py --goldfile GOLDFILE --predfile PREDFILE --ngram N
