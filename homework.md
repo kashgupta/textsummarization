@@ -9,6 +9,7 @@ An atomic event consists of two named entities in the same sentence (a relation)
 
 ### Files to Download:
 [data.tgz](https://drive.google.com/file/d/1I00XpcAUCbEgqpmR13Sp8_UcnOXzlQjP/view?usp=sharing): contains the data sets
+
 [evaluation script](https://github.com/kashgupta/textsummarization/blob/master/score.py): reports precision, recall, and f-score using ROUGE
 
 You may use packages from [spaCy](https://spacy.io/) to tokenize data, and do POS or named entity tagging.
@@ -36,6 +37,7 @@ For this part of the assignment, you will need to implement the following functi
 7. Select the 3 sentences that have the highest total atomic event weights to extract to the summary
 
 You can also try extracting more or fewer sentences, allowing for different kinds of words to be part of relations or connectors, or other methods to improve performance.
+
 
 Report the results of any modifications you made, your ROUGE-1 and ROUGE-2 precision, recall, and f-score, and any interesting observasions about the model
 
