@@ -69,16 +69,16 @@ clf = SVC(kernel = "rbf",probability = True)
 clf.fit(X_data_train,y_data_train)
 
 
-X_data_test = []
-with open("supervised_X_data_test.txt","r") as f:
-    data = f.read().split("\n")
-    for line in data:
-        X_data_test.append(line)
+# X_data_test = []
+# with open("supervised_X_data_test.txt","r") as f:
+#     data = f.read().split("\n")
+#     for line in data:
+#         X_data_test.append(line)
 
 entity_scores = []
 entity_sentence = []
 article_num = []
-with open("entity_scores_test.txt","r") as f:
+with open("entity_score_ranks_test.txt","r") as f:
     data = f.read().split("\n")
     for line in data:
         article_num.append(int(line.split("@@@")[0].strip()))

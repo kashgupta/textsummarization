@@ -69,42 +69,42 @@ stop_words = set(stopwords.words('english'))
 #     data = f.read().split("\n")
 #     for line in data:
 #         X_data.append(line)
-#  
+ 
 # y_data = []
 # with open("y_data_train_5K.txt","r") as f:
 #     data = f.read().split("\n")
 #     for line in data:
 #         y_data.append(line)   
-# 
+
 # with open("supervised_X_data_train.txt","w") as f:
 #     for line in X_data[:4000]:
 #         f.write(line)
 #         f.write("\n")
-# 
+
 # with open("supervised_y_data_train.txt","w") as f:
 #     for line in y_data[:4000]:
 #         f.write(line)
 #         f.write("\n")
-# 
+
 # with open("supervised_X_data_test.txt","w") as f:
 #     for line in X_data[4000:]:
 #         f.write(line)
 #         f.write("\n")
-# 
+
 # with open("supervised_y_data_test.txt","w") as f:
 #     for line in y_data[4000:]:
 #         f.write(line)
 #         f.write("\n")
 # =============================================================================
 
-X_data = []
-with open("supervised_X_data_train.txt","r") as f:
-    data = f.read().split("\n")
-    for line in data:
-        X_data.append(line)
+# X_data = []
+# with open("supervised_X_data_train.txt","r") as f:
+#     data = f.read().split("\n")
+#     for line in data:
+#         X_data.append(line)
  
 y_data = []  
-with open("supervised_y_data_train.txt","r") as f:
+with open("supervised_y_data_test.txt","r") as f:
     data = f.read().split("\n")
     for line in data:
         y_data.append(line) 
@@ -112,16 +112,16 @@ with open("supervised_y_data_train.txt","r") as f:
 entity_scores = []
 entity_sentence = []
 article_num = []
-with open("entity_scores.txt","r") as f:
+with open("../entity_score_ranks_test.txt","r") as f:
     data = f.read().split("\n")
     for line in data:
         article_num.append(int(line.split("@@@")[0].strip()))
-        entity_scores.append(float(line.split("@@@")[1].strip()))
-        entity_sentence.append(line.split("@@@")[2].strip())
+        entity_scores.append(float(line.split("@@@")[2].strip()))
+        entity_sentence.append(line.split("@@@")[1].strip())
 
 article_set = set(article_num)
         
-nlp = spacy.load('en') 
+nlp = spacy.load('en', disable=['parser', 'tagger', 'ner', 'textcat', 'tokenizer'])
 
 features_labels = []
 
@@ -150,8 +150,8 @@ for article in article_set:
     tf_matrix_bi_1 = vect_bi_1.fit_transform(X_data_sentences)
     
 
-    X_data_sentences = [a for a in X_data_sentences if len(set(a.split()) - stop_words)> 5]
-    reference_2grams = create_ngrams(y_data[article].split(),2)
+    #X_data_sentences = [a for a in X_data_sentences if len(set(a.split()) - stop_words)> 2]
+    reference_2grams = create_ngrams(y_data[article-1].split(),2)
     system_2grams = [create_ngrams(a.split(),2) for a in X_data_sentences]
     precision_recall = [rouge_metrics(a,reference_2grams) for a in system_2grams]
     f_score_list = [f_score(a[0],a[1]) for a in precision_recall]
@@ -191,14 +191,14 @@ for article in article_set:
             sentence_label = 1
         else:
             sentence_label = 0
-        text = nlp(sentences[j])
+        text = nlp(sentences[j].decode("utf8"))
         event_features_length = len('{0}'.format(text.ents).split())
         current_sentence_vect = np.transpose(np.asarray(tf_matrix_uni[j].todense()))
         FirstRel_Doc = compute_cosine_similarity(first_sentence_vect,current_sentence_vect)
-        features_labels.append({"position":position,"doc_first":doc_first,"length":length,"quote":quote,"Centroid_Uni":Centroid_uni,"Centroid_Bi":Centroid_bi,"SigTerm_Uni":SigTerm_Uni,"SigTerm_Bi":SigTerm_Bi,"FreqWord_Uni":FreqWord_Uni,"FreqWord_Bi":FreqWord_Bi,"Event_Features":event_features_length,"FirstRel_Doc":FirstRel_Doc,"Label":sentence_label,"entity_score":X_data_entity_score[j]})           
+        features_labels.append({"article-sentence":str(article) + "-" + str(j),"position":position,"doc_first":doc_first,"length":length,"quote":quote,"Centroid_Uni":Centroid_uni,"Centroid_Bi":Centroid_bi,"SigTerm_Uni":SigTerm_Uni,"SigTerm_Bi":SigTerm_Bi,"FreqWord_Uni":FreqWord_Uni,"FreqWord_Bi":FreqWord_Bi,"Event_Features":event_features_length,"FirstRel_Doc":FirstRel_Doc,"Label":sentence_label,"entity_score":X_data_entity_score[j]})           
 
 features_label_df = pd.DataFrame(features_labels)
-features_label_df.to_csv("Training_Data.csv",index=False)
+features_label_df.to_csv("Test_Data_Extension_3.csv",index=False)
 
 end = datetime.datetime.now()
 duration = end - start
