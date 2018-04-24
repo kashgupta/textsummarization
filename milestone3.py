@@ -10,7 +10,8 @@ parser = argparse.ArgumentParser()
 #To run spacy, in command line: pip install spacy
 #python -m spacy download en
 
-nlp = spacy.load('en', disable=['parser', 'tagger', 'ner', 'textcat', 'tokenizer'])
+# nlp = spacy.load('en', disable=['parser', 'tagger', 'ner', 'textcat', 'tokenizer'])
+nlp = spacy.load('en')
 nlp.add_pipe(nlp.create_pipe('sentencizer'))
 
 parser.add_argument('--test_file', type=str, required=True, dest = 'test_file')
@@ -234,7 +235,6 @@ for article in articles:
 
     #print('sentence_scores')
     #print(sentence_scores)
-    
     all_scores += sentence_scores
 
     sentence_scores = np.array(sentence_scores)
@@ -264,15 +264,15 @@ with open(args.output_file,"w") as f:
 end_time = datetime.datetime.now()
 total_time = end_time - start_time
 
-with open("entity_score_ranks_test.txt","w") as f:
-    for line in entity_score_extension:
-        f.write(str(line[0]) + " @@@ " + str(line[1]) + " @@@ " + str(line[2]))
-        f.write("\n")
-
-# with open("entity_scores_test.txt","w") as f:
-#     for article, line, sentence in zip(all_articles,all_scores,all_sentences):
-#         f.write(str(int(article)) + " @@@ " + str(line) + " @@@ " + str(sentence))
+# with open("entity_score_ranks_test.txt","w") as f:
+#     for line in entity_score_extension:
+#         f.write(str(line[0]) + " @@@ " + str(line[1]) + " @@@ " + str(line[2]))
 #         f.write("\n")
+
+with open("entity_scores_test.txt","w") as f:
+    for article, line, sentence in zip(all_articles,all_scores,all_sentences):
+        f.write(str(int(article)) + " @@@ " + str(line) + " @@@ " + str(sentence))
+        f.write("\n")
 
 print('total running time for '+str(number_articles)+" articles is "+str(total_time))
 

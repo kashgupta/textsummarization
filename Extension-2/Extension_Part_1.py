@@ -104,7 +104,7 @@ stop_words = set(stopwords.words('english'))
 #         X_data.append(line)
  
 y_data = []  
-with open("supervised_y_data_test.txt","r") as f:
+with open("supervised_y_data_train.txt","r") as f:
     data = f.read().split("\n")
     for line in data:
         y_data.append(line) 
@@ -112,17 +112,17 @@ with open("supervised_y_data_test.txt","r") as f:
 entity_scores = []
 entity_sentence = []
 article_num = []
-with open("../entity_score_ranks_test.txt","r") as f:
+with open("../entity_scores_train.txt","r") as f:
     data = f.read().split("\n")
     for line in data:
         article_num.append(int(line.split("@@@")[0].strip()))
-        entity_scores.append(float(line.split("@@@")[2].strip()))
-        entity_sentence.append(line.split("@@@")[1].strip())
+        entity_scores.append(float(line.split("@@@")[1].strip()))
+        entity_sentence.append(line.split("@@@")[2].strip())
 
 article_set = set(article_num)
         
-nlp = spacy.load('en', disable=['parser', 'tagger', 'ner', 'textcat', 'tokenizer'])
-
+# nlp = spacy.load('en', disable=['parser', 'tagger', 'ner', 'textcat', 'tokenizer'])
+nlp = spacy.load('en')
 features_labels = []
 
 for article in article_set:
@@ -195,10 +195,10 @@ for article in article_set:
         event_features_length = len('{0}'.format(text.ents).split())
         current_sentence_vect = np.transpose(np.asarray(tf_matrix_uni[j].todense()))
         FirstRel_Doc = compute_cosine_similarity(first_sentence_vect,current_sentence_vect)
-        features_labels.append({"article-sentence":str(article) + "-" + str(j),"position":position,"doc_first":doc_first,"length":length,"quote":quote,"Centroid_Uni":Centroid_uni,"Centroid_Bi":Centroid_bi,"SigTerm_Uni":SigTerm_Uni,"SigTerm_Bi":SigTerm_Bi,"FreqWord_Uni":FreqWord_Uni,"FreqWord_Bi":FreqWord_Bi,"Event_Features":event_features_length,"FirstRel_Doc":FirstRel_Doc,"Label":sentence_label,"entity_score":X_data_entity_score[j]})           
+        features_labels.append({"position":position,"doc_first":doc_first,"length":length,"quote":quote,"Centroid_Uni":Centroid_uni,"Centroid_Bi":Centroid_bi,"SigTerm_Uni":SigTerm_Uni,"SigTerm_Bi":SigTerm_Bi,"FreqWord_Uni":FreqWord_Uni,"FreqWord_Bi":FreqWord_Bi,"Event_Features":event_features_length,"FirstRel_Doc":FirstRel_Doc,"Label":sentence_label,"entity_score":X_data_entity_score[j]})           
 
 features_label_df = pd.DataFrame(features_labels)
-features_label_df.to_csv("Test_Data_Extension_3.csv",index=False)
+features_label_df.to_csv("Extension_2_Features.csv",index=False)
 
 end = datetime.datetime.now()
 duration = end - start

@@ -43,7 +43,7 @@ def compute_cosine_similarity(vector1, vector2):
 
 X_data_train = []
 y_data_train = []
-with open("Training_data.csv","r") as f:
+with open("Extension_2_Features.csv","r") as f:
     data= csv.reader(f)
     for row in data:
         X_data_train.append(row[:6] + row[7:])
@@ -78,7 +78,7 @@ clf.fit(X_data_train,y_data_train)
 entity_scores = []
 entity_sentence = []
 article_num = []
-with open("entity_score_ranks_test.txt","r") as f:
+with open("../entity_scores_test.txt","r") as f:
     data = f.read().split("\n")
     for line in data:
         article_num.append(int(line.split("@@@")[0].strip()))
@@ -134,7 +134,7 @@ for article in article_set:
         SigTerm_Bi = len(np.where(tf_matrix_bi[i].todense() > 0)[0])
         FreqWord_Uni = np.sum(tf_matrix_uni_1[i].todense())
         FreqWord_Bi = np.sum(tf_matrix_bi_1[i].todense())
-        text = nlp(sentences[i])
+        text = nlp(sentences[i].decode("utf8"))
         event_features_length = len('{0}'.format(text.ents).split())
         current_sentence_vect = np.transpose(np.asarray(tf_matrix_uni[i].todense()))
         FirstRel_Doc = compute_cosine_similarity(first_sentence_vect,current_sentence_vect)
