@@ -10,7 +10,8 @@ parser = argparse.ArgumentParser()
 #To run spacy, in command line: pip install spacy
 #python -m spacy download en
 
-nlp = spacy.load('en')
+nlp = spacy.load('en', disable=['parser', 'tagger', 'ner', 'textcat', 'tokenizer'])
+nlp.add_pipe(nlp.create_pipe('sentencizer'))
 
 parser.add_argument('--test_file', type=str, required=True, dest = 'test_file')
 parser.add_argument('--pred_file', type=str, required=True, dest = 'output_file')
@@ -79,6 +80,8 @@ all_sentences = []
 all_articles = []
 
 counter_article = 0
+
+entity_score_extension = []
 for article in articles:
     counter_article += 1
     print(counter_article)
@@ -238,6 +241,14 @@ for article in articles:
 
     sorted_index_sentences = sentence_scores.argsort()[-summary_length:]
 
+    for k in range(len(sentence_scores)):
+        if k in sorted_index_sentences:
+            entity_score_extension.append([counter_article,sentences[k],1])
+        else:
+            entity_score_extension.append([counter_article,sentences[k],0])
+
+
+
     article_summary_2 = ""
     for i in range(summary_length):
         article_summary_2 += str(sentences[sorted_index_sentences[i]])
@@ -253,10 +264,15 @@ with open(args.output_file,"w") as f:
 end_time = datetime.datetime.now()
 total_time = end_time - start_time
 
-with open("entity_scores_test.txt","w") as f:
-    for article, line, sentence in zip(all_articles,all_scores,all_sentences):
-        f.write(str(int(article)) + " @@@ " + str(line) + " @@@ " + str(sentence))
+with open("entity_score_ranks_test.txt","w") as f:
+    for line in entity_score_extension:
+        f.write(str(line[0]) + " @@@ " + str(line[1]) + " @@@ " + str(line[2]))
         f.write("\n")
+
+# with open("entity_scores_test.txt","w") as f:
+#     for article, line, sentence in zip(all_articles,all_scores,all_sentences):
+#         f.write(str(int(article)) + " @@@ " + str(line) + " @@@ " + str(sentence))
+#         f.write("\n")
 
 print('total running time for '+str(number_articles)+" articles is "+str(total_time))
 
