@@ -233,16 +233,18 @@ for article in articles:
             sentence_scores.append(temp_sum)
         sentence_scores = np.array(sentence_scores)    
         sorted_top_sentences = sentence_scores.argsort()[-summary_length:]
-        article_summary_2+= str(sentences[sorted_top_sentences[0]])
-        
-        #decompose remove used sentence and atomic events
-        article_matrix[sorted_top_sentences[0]] = 0
-        for se in sentence_aes:
-            for ae in se:
-                i = ae[0]
-                j = ae[1]
-                connector_relation_matrix[i][j] = 0
+        article_summary_2+= str(sentences[sorted_top_sentences[2]])      
 
+        #decompose remove used sentence and atomic events
+ 
+        sent = np.copy(article_matrix[sorted_top_sentences[2]])
+        article_matrix[sorted_top_sentences[2]] = 0
+        
+        for k in range(len(sent)):
+            if(sent[k] == 1):
+                i = sentence_aes[sorted_top_sentences[2]][k][0]
+                j = sentence_aes[sorted_top_sentences[2]][k][1]
+                connector_relation_matrix[i][j] = 0
     y_pred_2.append(article_summary_2)
 
 
