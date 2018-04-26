@@ -14,8 +14,23 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.feature_extraction.text import CountVectorizer
 import spacy
 import pandas as pd
+import numpy as np
+import matplotlib.mlab as mlab
+import matplotlib.pyplot as plt
+from matplotlib.ticker import FuncFormatter
 
 start = datetime.datetime.now()
+
+def to_percent(y, position):
+    # Ignore the passed in position. This has the effect of scaling the default
+    # tick locations.
+    s = str(100 * y)
+
+    # The percent symbol needs escaping in latex
+    if matplotlib.rcParams['text.usetex'] is True:
+        return s + r'$\%$'
+    else:
+        return s + '%'
 
 def rouge_metrics(system_list,reference_list):
     reference_word_count = len(reference_list)
@@ -126,8 +141,10 @@ features_labels = []
 
 best_sentences_list = []
 
+f_scores = []
+
 for article in article_set:
-    print(article)
+    #print(article)
     X_data_sentences_original = []
     X_data_sentences = []
     
@@ -167,20 +184,32 @@ for article in article_set:
     
     best_summary = " ".join(best_sentences)
     best_ngrams = create_ngrams(best_summary.split(),2)
-    print("3",best_summary)
     original_summary = y_data[article-1]
     original_ngrams = create_ngrams(original_summary.split(),2)
-    print("3.1", original_summary)
-    print(original_ngrams)
-    print(best_ngrams)
+    
     rouges = rouge_metrics(original_ngrams,best_ngrams)
-    print(rouges)
+    #print(rouges)
     fscore = f_score(1.0*rouges[0],1.0*rouges[1])
-    print(fscore)
+    #print(fscore)
+    f_scores.append(fscore)
 
     best_sentences_list.append(" ".join(best_sentences))
     sentences = X_data_sentences_original
     
+
+print('average best fscore')
+print(sum(f_scores)/len(f_scores))
+
+
+n, bins, patches = plt.hist(f_scores, 20, normed=False, facecolor='green', alpha=0.75)
+
+plt.xlabel('best rouge 2 possible')
+plt.ylabel('Probability')
+
+#formatter = FuncFormatter(to_percent)
+#plt.gca().yaxis.set_major_formatter(formatter)
+
+plt.show()
 
 
 end = datetime.datetime.now()
