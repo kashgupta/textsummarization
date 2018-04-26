@@ -1,0 +1,2 @@
+This folder contains the file with the predictions from our best extension and the labels corresponding to it.
+The file score.py should be run as instructed before in previous submissions and the rouge-1 and rouge-2 scores will be calculated.
