@@ -41,9 +41,9 @@ y_test_np = np.array(y_test_df).squeeze()
 X_test_np = np.array(X_test_df)
 
 # clf = MLPRegressor(solver='sgd', alpha=1e-5, hidden_layer_sizes=(100, 100, 100), max_iter=1000, shuffle=True)
-clf = AdaBoostClassifier(n_estimators=10, algorithm='SAMME.R')
+clf = AdaBoostClassifier(n_estimators=20, algorithm='SAMME.R')
 #clf = LogisticRegression()
-# clf = RandomForestRegressor(n_estimators=20, max_depth=5)
+#clf = RandomForestRegressor(n_estimators=20, max_depth=5)
 #clf = RandomForestClassifier(max_depth=4, random_state=0)
 #clf = svm.SVR(kernel='linear', C=1e3, gamma=0.1)
 
